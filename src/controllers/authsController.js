@@ -44,10 +44,15 @@ export const register = async(req, res) => {
     
         //Créer le JWT Token
         const token = jwt.sign(
-            { userId: newUser.id },
-            process.env.JWT_SECRET,
-            { expiresIn: '24h' }
-        )
+        { userId: newUser.id,
+            nickname: newUser.nickname,
+            mail: newUser.mail,
+            firstname: newUser.firstname,
+            lastname: newUser.lastname
+         },
+        process.env.JWT_SECRET,
+        { expiresIn: '24h' }
+        );
 
         //Retourne un bon message d'erreur
         res.status(200).json({
@@ -90,7 +95,12 @@ export const login = async (req, res) => {
 
     //Créer un jwt token
     const token = jwt.sign(
-        { userId: user.id },
+        { userId: user.id,
+            nickname: user.nickname,
+            mail: user.mail,
+            firstname: user.firstname,
+            lastname: user.lastname
+         },
         process.env.JWT_SECRET,
         { expiresIn: '24h' }
     );
@@ -101,4 +111,31 @@ export const login = async (req, res) => {
         mail: user.eail,
         token
     });
+};
+
+/**
+ * Récupère les informations du JWT.
+ */
+export const getJWTInformation = (req, res) => {
+    try {
+        // Récupérer l'en-tête Authorization
+        const authHeader = req.headers['authorization'];
+
+        if (!authHeader || !authHeader.startsWith('Bearer ')) {
+            return res.status(400).json({ error: 'token manquant' });
+        }
+
+        //Retire le "bearer" au début pour décoder correctement
+        const token = authHeader.split(' ')[1];
+
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+        return res.status(200).json({
+            message: 'Informations du JWT récupérées avec succès',
+            data: decoded
+        });
+
+    } catch (error) {
+        return res.status(500).json({ error: 'Erreur: ' + error.message });
+    }
 };

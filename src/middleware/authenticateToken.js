@@ -17,7 +17,6 @@ export const authenticateToken = (req, res, next) => {
             return res.status(401).json({error:'Token is required'})
         }
 
-
         const decodeToken = jwt.verify(token, process.env.JWT_SECRET)
         const userId = decodeToken.userId
         req.userId = { userId }
