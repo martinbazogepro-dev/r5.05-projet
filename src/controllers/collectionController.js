@@ -34,7 +34,7 @@ export const created = async(req, res) => {
 
 export const read = async (req, res) => {
     try {
-        const [readCollection] = await db.read(collectionTable);
+        const [readCollection] =await db.select().from(collectionTable);
         res.status(200).json({
             message: 'Collection',
             userData: readCollection
