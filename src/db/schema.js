@@ -1,14 +1,14 @@
-import { sqliteTable, text, integer, boolean } from 'drizzle-orm/sqlite-core'
+import { sqliteTable, text, integer } from 'drizzle-orm/sqlite-core'
 import { randomUUID } from 'crypto';
 
 export const accountTable = sqliteTable("account", {
-    id: integer().primaryKey().$defaultFn(() => randomUUID),
+    id: text().primaryKey().$defaultFn(() => randomUUID()),
     mail: text('mail', { length:100 }).notNull(),
     nickname: text('nickname', { length: 50 }).notNull(),
     firstname: text('firstname', { length: 50 }).notNull(),
     lastname: text('lastname', { length: 50 }).notNull(),
     pass: text('pass', {length: 80 }).notNull(),
-    creationDate: integer('creation_date', {node: 'timestamp'}).notNull().$defaultFn(() => new Date())
+    creationDate: integer('creation_date').notNull().$defaultFn(() => Math.floor(new Date().getTime() / 1000))
 })
 
 export const adminTable = sqliteTable("admin", {
