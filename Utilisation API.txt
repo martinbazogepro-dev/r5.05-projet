@@ -1,0 +1,17 @@
+
+Route /auth :
+
+/auth/login :
+{
+  "mail": "test@example.fr"
+  "password": "pass"
+}
+
+/auth/register
+{
+  "mail": "hugo.hugo@orange.fr",
+  "firstname": "hugoo",
+  "lastname": "hugoo",
+  "nickname": "hugoo",
+  "password": "hugogo"
+}

@@ -2,6 +2,8 @@ import { db } from '../db/database.js';
 import { accountTable } from '../db/schema.js'
 import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken';
+import { eq } from 'drizzle-orm'
+
 
 /**
  * @param {request} req
@@ -9,9 +11,25 @@ import jwt from 'jsonwebtoken';
  */
 export const register = async(req, res) => {
     try {
+        //Récupère les valeurs du body
         const { mail, firstname, lastname, nickname, password } = req.body;
+        //Hash le mdp
         const pass = await bcrypt.hash(password, 10)
 
+        //Vérifie si l'utilisateur existe déja
+        const users = await db.select()
+            .from(accountTable)
+            .where(eq(accountTable.mail, mail))
+            .limit(1);
+
+        // Si le mail existe déja on renvoie une erreur
+        if (users.length > 0) {
+            return res.status(400).json({
+                message: 'L\'email existe déjà.'
+            });
+        }
+
+        //Insère le nouvel utilisateur
         const [newUser] = await db.insert(accountTable).values({
             mail,
             nickname,
@@ -24,18 +42,21 @@ export const register = async(req, res) => {
             id: accountTable.id
         })
     
+        //Créer le JWT Token
         const token = jwt.sign(
             { userId: newUser.id },
             process.env.JWT_SECRET,
             { expiresIn: '24h' }
         )
 
+        //Retourne un bon message d'erreur
         res.status(200).json({
             message: 'User registered',
             userData: newUser,
             token
         })
     } catch(error){
+        //On log l'erreur et on informe l'utilisateur
         console.error(error)
         res.status(500).json({
             error: 'Erreur : ' + error
@@ -43,3 +64,41 @@ export const register = async(req, res) => {
     }
 }
 
+export const login = async (req, res) => {
+    //Récupère les identifiants du body
+    const { mail, password } = req.body;
+
+    //Cherche si un utilisateur avec ce nom existe
+    const users = await db.select()
+        .from(accountTable)
+        .where(eq(accountTable.mail, mail))
+        .limit(1);
+
+    //Transforme le tableau en une valeur
+    const user = users[0];
+
+    //Si l'utilisateur n'existe pas
+    if (!user) {
+        return res.status(401).json({ error: "Email ou mot de passe incorrect" });
+    }
+
+    //Vérifie si le mdp de l'utilisateur est valide
+    const isPasswordValid = await bcrypt.compare(password, user.pass);
+    if (!isPasswordValid) {
+        return res.status(401).json({ error: "mot de passe incorrect" });
+    }
+
+    //Créer un jwt token
+    const token = jwt.sign(
+        { userId: user.id },
+        process.env.JWT_SECRET,
+        { expiresIn: '24h' }
+    );
+
+    //Retourne le token et les infos
+    res.status(200).json({
+        username: user.nickname,
+        mail: user.eail,
+        token
+    });
+};
