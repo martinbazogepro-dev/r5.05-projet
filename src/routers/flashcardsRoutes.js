@@ -1,6 +1,7 @@
 import { Router } from "express"
-import { validateBody, validateParams } from "../middleware/validation"
-import { createFlashcardsSchema, flashcardIdSchema } from "../models/flashcards"
+import { deleteFlashcard, getAllFlashcards, getOneFlashcard, postFlashcard } from "../controllers/flashcardsController.js" 
+import { validateBody, validateParams } from "../middleware/validation.js"
+import { createFlashcardsSchema, flashcardIdSchema } from "../models/flashcards.js"
 import { authenticateToken } from "../middleware/authenticateToken.js"
 
 const router = Router()
