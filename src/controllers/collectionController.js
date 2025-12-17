@@ -7,7 +7,8 @@ import { collectionTable } from '../db/schema.js'
  */
 export const created = async(req, res) => {
     try {
-        const { title, description, is_public, ownerId } = req.body;
+        const { title, description, is_public } = req.body;
+        const ownerId = req.userId.userId;
         const [newCollection] = await db.insert(collectionTable).values({
             title,
             description,
