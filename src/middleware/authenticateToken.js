@@ -2,6 +2,8 @@ import { request } from "express"
 import jwt from 'jsonwebtoken'
 import 'dotenv/config'
 import { adminTable } from "../db/schema.js"
+import { db } from "../db/database.js"
+import { eq } from "drizzle-orm"
 
 /**
  * 
@@ -17,7 +19,6 @@ export const authenticateToken = (req, res, next) => {
         if(!token){
             return res.status(401).json({error:'Token is required'})
         }
-
 
         const decodeToken = jwt.verify(token, process.env.JWT_SECRET)
         const userId = decodeToken.userId
@@ -40,20 +41,20 @@ export const adminVerificationToken = async (req, res, next) => {
 
         const decodeToken = jwt.verify(token, process.env.JWT_SECRET)
         const userId = decodeToken.userId
-        
+
         //Vérifie si l'utilisateur existe déja
         const users = await db.select()
             .from(adminTable)
             .where(eq(adminTable.accountId, userId))
             .limit(1);
-
         if(users.length < 1){
+            console.log("Aucune ligne trouvée...")
             throw new Error("Vous n'avez pas les droits nécéssaires")
         }
 
         next()
-        } catch(error){
-            res.status(401).json({error:'Chalut'})
+        } catch(erreur){
+            res.status(401).json({error: erreur.message})
 
         }
 }

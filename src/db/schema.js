@@ -12,7 +12,7 @@ export const accountTable = sqliteTable("account", {
 })
 
 export const adminTable = sqliteTable("admin", {
-    accountId: integer().notNull()
+    accountId: text().notNull()
 })
 
 export const collectionTable = sqliteTable("collection", {
