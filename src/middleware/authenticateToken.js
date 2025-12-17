@@ -1,7 +1,7 @@
 import { request } from "express"
 import jwt from 'jsonwebtoken'
 import 'dotenv/config'
-import { adminTable } from "../db/schema"
+import { adminTable } from "../db/schema.js"
 
 /**
  * 
