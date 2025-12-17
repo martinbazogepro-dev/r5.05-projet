@@ -65,5 +65,8 @@ export const deleteOneUser = async(req, res) => {
             error: 'Erreur : ' + erreur.message
         })
     }
+<<<<<<< HEAD
 
+=======
+>>>>>>> gael
 }
