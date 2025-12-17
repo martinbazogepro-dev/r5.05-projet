@@ -1,4 +1,4 @@
-.env
 .git
 node_modules
+.env
 local.db

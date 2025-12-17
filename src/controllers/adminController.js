@@ -47,3 +47,29 @@ export const getOneUser = async(req, res) => {
     }
 
 }
+
+export const deleteOneUser = async(req, res) => {
+    const { id } = req.params
+
+    try{
+        let user = await db.delete()
+            .from(accountTable)
+            .where(eq(accountTable.id, id))
+            .limit(1);
+
+        user = user[0]
+
+        if(!user){
+            throw new Error("Aucun compte trouvé")
+        }
+        
+        res.status(200).json({
+            user
+        })
+
+    } catch(erreur){
+        res.status(500).json({
+            error: 'Erreur : ' + erreur.message
+        })
+    }
+}
