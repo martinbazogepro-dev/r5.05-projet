@@ -1,7 +1,7 @@
 import { z } from "zod"
 
 export const flashcardIdSchema = z.object({
-    id: z.uuid(),
+    id: z.uuid().nullish(),
 })
 
 export const createFlashcardsSchema = z.object({

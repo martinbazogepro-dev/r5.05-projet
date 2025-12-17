@@ -22,7 +22,9 @@ Route /flashcards :
 
 [POST] /flashcards
 {
-  "collectionId": "1",
+  "collectionId": 1,
   "frontText": "bonjour",
-  "backText": "au revoir"
+  "backText": "au revoir",
+  "frontUrl": "",
+  "backUrl": ""
 }

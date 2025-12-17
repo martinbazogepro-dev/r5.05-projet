@@ -35,7 +35,7 @@ export const deleteFlashcard = async (request, response) => {
     const { id } = request.params
 
     try {
-        const userId = request.user.userId
+        const userId = request.userId
         const [flashcardToDelete] = await db.select().from(flashcardTable).where(eq(flashcardTable.id, id))
 
         /* collection pas faites, la verif de l'userid a peu pres ça
@@ -68,17 +68,22 @@ export const getOneFlashcard = async (request, response) => {
     const { id } = request.params
     
     try {
-        const flashcard = await db.select().from(flashcardTable).where(eq(flashcardTable.id, id))
-        
+        const [flashcard ]= await db.select().from(flashcardTable).where(eq(flashcardTable.id, id))
+
         if (!flashcard) {
             return response.status(404).json({
-                error: "Question non trouvée",
+                error: "Flashcard non trouvée",
             })
         }
+
+        response.status(200).json({
+            message: "Flashcard trouvée",
+            data: flashcard,
+        })
     } catch (error) {
         console.error(error)
         response.status(500).json({
-            error: "Pas réussi à obtenir la question",
+            error: "Pas réussi à obtenir la flashcard",
         })
     }
 }
