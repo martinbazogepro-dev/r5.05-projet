@@ -7,16 +7,15 @@ import { collectionTable } from '../db/schema.js'
  */
 export const created = async(req, res) => {
     try {
-        const { title, description, is_public, owner_id } = req.body;
-
+        const { title, description, is_public, ownerId } = req.body;
         const [newCollection] = await db.insert(collectionTable).values({
             title,
             description,
             is_public,
-            owner_id
+            ownerId
         }).returning({
-            id: collectionTableTable.id,
-            title: collectionTableTable.title            
+            id: collectionTable.id,
+            title: collectionTable.title            
         })
 
         res.status(200).json({
@@ -42,7 +41,7 @@ export const read = async (req, res) => {
     } catch (error) {
         console.error(error);
         res.status(500).json({
-            error: 'Erreur : ' + error.message
+            error: 'Erreur attention message : ' + error.message
         });
     }
 };

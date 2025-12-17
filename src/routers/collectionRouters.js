@@ -6,7 +6,7 @@ import { created, read } from '../controllers/collectionController.js';
 
 const router = Router()
 
-router.post('/collection', validateBody(collectionSchema), created)
-router.get('/collection', read)
+router.post('/create', validateBody(collectionSchema), created)
+router.get('/', read)
 
 export default router

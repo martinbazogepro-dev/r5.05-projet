@@ -9,7 +9,7 @@ const app = express();
 app.use(express.json());
 
 app.use('/auth', authsRoutes)
-app.use('/col', collectionRoutes)
+app.use('/collections', collectionRoutes)
 
 app.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`);
