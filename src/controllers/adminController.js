@@ -47,3 +47,23 @@ export const getOneUser = async(req, res) => {
     }
 
 }
+
+export const deleteOneUser = async(req, res) => {
+    const { id } = req.params
+
+    try{
+        await db
+            .delete(accountTable)
+            .where(eq(accountTable.id, id))
+        
+        res.status(200).json({
+            "message": "Utilisateur supprimé avec succès."
+        })
+
+    } catch(erreur){
+        res.status(500).json({
+            error: 'Erreur : ' + erreur.message
+        })
+    }
+
+}

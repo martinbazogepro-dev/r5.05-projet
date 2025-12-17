@@ -13,19 +13,30 @@ export const accountTable = sqliteTable("account", {
 
 export const adminTable = sqliteTable("admin", {
     accountId: text().notNull()
+    .references(() => accountTable.id, {
+        onDelete: 'cascade'
+    })
 })
 
 export const collectionTable = sqliteTable("collection", {
-    id: integer().primaryKey().$defaultFn(() => randomUUID),
+    id: text().primaryKey().$defaultFn(() => randomUUID()),
     title: text('title', { length: 50 }).notNull(),
     description: text('description', { length: 250 }),
     isPublic: integer('is_public', { mode: 'boolean' }).notNull().default(false),
-    ownerId: integer('owner_id').notNull()
+    ownerId: text('owner_id')
+        .notNull()
+        .references(() => accountTable.id, {
+            onDelete: 'cascade'
+        })
 })
 
 export const flashcardTable = sqliteTable("flashcard", {
-    id: integer().primaryKey().$defaultFn(() => randomUUID),
-    collectionId: integer().notNull(),
+    id: text().primaryKey().$defaultFn(() => randomUUID()),
+    collectionId: text('collection_id')
+        .notNull()
+        .references(() => collectionTable.id, {
+            onDelete: 'cascade'
+        }),
     frontText: text('front_text', { length: 50 }).notNull(),
     backText: text('back_text', { length: 50 }).notNull(),
     frontUrl: text('front_url', { length: 50 }).notNull(),
@@ -33,9 +44,18 @@ export const flashcardTable = sqliteTable("flashcard", {
 })
 
 export const nextRevisionDateTable = sqliteTable("next_revision_date", {
-    id: integer().primaryKey().$defaultFn(() => randomUUID),
-    account_id: integer().notNull(),
-    flashcard_id: integer().notNull(),
+    id: text().primaryKey().$defaultFn(() => randomUUID()),
+    accountId: text('account_id')
+        .notNull()
+        .references(() => accountTable.id, {
+            onDelete: 'cascade'
+        }),
+
+    flashcardId: text('flashcard_id')
+        .notNull()
+        .references(() => flashcardTable.id, {
+            onDelete: 'cascade'
+        }),
     nextRevisionDate: integer('next_revision_date', {node: 'timestamp'}).notNull().$defaultFn(() => new Date()),
     lastRevisionDate: integer('last_revision_date', {node: 'timestamp'}).notNull().$defaultFn(() => new Date()),
     level: integer('level').notNull()
