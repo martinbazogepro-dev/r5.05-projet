@@ -13,6 +13,4 @@ router.get("/", getAllFlashcards)
 router.post("/", validateBody(createFlashcardsSchema), postFlashcard)
 router.delete("/:id", validateParams(flashcardIdSchema), deleteFlashcard)
 
-
-
 export default router

@@ -5,9 +5,9 @@ export const flashcardIdSchema = z.object({
 })
 
 export const createFlashcardsSchema = z.object({
-    collection_id: z.bigint(),
-    front_text: z.string().min(1, "Le champ front_text est requis").max(200, "Le texte ne doit pas dépasser 200 caractères"),
-    back_text: z.string().min(1, "Le champ back_text est requis").max(200, "Le texte ne doit pas dépasser 200 caractères"),
-    front_url: z.string().max(200, "Le texte ne doit pas dépasser 200 caractères"),
-    back_url: z.string().max(200, "Le texte ne doit pas dépasser 200 caractères"),
+    collectionId: z.number().nullish(),
+    frontText: z.string().min(1, "Le champ front_text est requis").max(200, "Le texte ne doit pas dépasser 200 caractères").nullish(),
+    backText: z.string().min(1, "Le champ back_text est requis").max(200, "Le texte ne doit pas dépasser 200 caractères").nullish(),
+    frontUrl: z.string().max(200, "Le texte ne doit pas dépasser 200 caractères").nullish(),
+    backUrl: z.string().max(200, "Le texte ne doit pas dépasser 200 caractères").nullish(),
 })

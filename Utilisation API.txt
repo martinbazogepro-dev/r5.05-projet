@@ -15,3 +15,14 @@ Route /auth :
   "nickname": "hugoo",
   "password": "hugogo"
 }
+
+==================================
+
+Route /flashcards :
+
+[POST] /flashcards
+{
+  "collectionId": "1",
+  "frontText": "bonjour",
+  "backText": "au revoir"
+}

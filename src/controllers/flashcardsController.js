@@ -14,7 +14,7 @@ export const getAllFlashcards = async (request, response) => {
     }
 }
 
-export const postFlashcard = async (request, reponse) => {
+export const postFlashcard = async (request, response) => {
     try {
         const flashcard = request.body
         const [createdFlashcard] = await db.insert(flashcardTable).values(flashcard).returning()
@@ -39,7 +39,7 @@ export const deleteFlashcard = async (request, response) => {
         const [flashcardToDelete] = await db.select().from(flashcardTable).where(eq(flashcardTable.id, id))
 
         /* collection pas faites, la verif de l'userid a peu pres ça
-        if (userId != flashcardToDelete.collection_id.owner_id) {
+        if (userId != flashcardToDelete.collectionId.owner_id) {
             return response.status(403).json({
                 error: "Non autorisé",
             })

@@ -16,7 +16,7 @@ export const adminTable = sqliteTable("admin", {
 })
 
 export const collectionTable = sqliteTable("collection", {
-    id: integer().primaryKey().$defaultFn(() => randomUUID),
+    id: text().primaryKey().$defaultFn(() => randomUUID()),
     title: text('title', { length: 50 }).notNull(),
     description: text('description', { length: 250 }),
     isPublic: integer('is_public', { mode: 'boolean' }).notNull().default(false),
@@ -24,16 +24,16 @@ export const collectionTable = sqliteTable("collection", {
 })
 
 export const flashcardTable = sqliteTable("flashcard", {
-    id: integer().primaryKey().$defaultFn(() => randomUUID),
+    id: text().primaryKey().$defaultFn(() => randomUUID()),
     collectionId: integer().notNull(),
     frontText: text('front_text', { length: 50 }).notNull(),
     backText: text('back_text', { length: 50 }).notNull(),
-    frontUrl: text('front_url', { length: 50 }).notNull(),
-    backUrl: text('back_url', { length: 50 }).notNull(),
+    frontUrl: text('front_url', { length: 50 }),
+    backUrl: text('back_url', { length: 50 }),
 })
 
 export const nextRevisionDateTable = sqliteTable("next_revision_date", {
-    id: integer().primaryKey().$defaultFn(() => randomUUID),
+    id: text().primaryKey().$defaultFn(() => randomUUID()),
     account_id: integer().notNull(),
     flashcard_id: integer().notNull(),
     nextRevisionDate: integer('next_revision_date', {node: 'timestamp'}).notNull().$defaultFn(() => new Date()),
