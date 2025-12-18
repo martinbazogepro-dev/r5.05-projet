@@ -39,8 +39,8 @@ export const flashcardTable = sqliteTable("flashcard", {
         }),
     frontText: text('front_text', { length: 50 }).notNull(),
     backText: text('back_text', { length: 50 }).notNull(),
-    frontUrl: text('front_url', { length: 50 }).notNull(),
-    backUrl: text('back_url', { length: 50 }).notNull(),
+    frontUrl: text('front_url', { length: 50 }),
+    backUrl: text('back_url', { length: 50 }),
 })
 
 export const nextRevisionDateTable = sqliteTable("next_revision_date", {
