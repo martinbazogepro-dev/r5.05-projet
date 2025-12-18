@@ -3,8 +3,8 @@ Route /auth :
 
 /auth/login :
 {
-  "mail": "test@example.fr"
-  "password": "pass"
+  "mail": "hugo.hugo@orange.fr",
+  "password": "hugogo"
 }
 
 /auth/register
@@ -20,11 +20,20 @@ Route /auth :
 
 Route /flashcards :
 
-[POST] /flashcards
+[POST] /flashcards/
 {
-  "collectionId": 1,
+  "collectionId": 050bb27d-209f-43bf-83a9-1d82400d16b3 (exemple),
   "frontText": "bonjour",
-  "backText": "au revoir",
-  "frontUrl": "",
-  "backUrl": ""
+  "backText": "au revoir"
+}
+
+===================================
+
+Route /collections :
+
+[POST] /collections
+{
+  "title": "titre",
+  "description": "description",
+  "is_public": true
 }

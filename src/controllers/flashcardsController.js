@@ -1,6 +1,6 @@
 import { eq } from "drizzle-orm"
 import { db } from "../db/database.js"
-import { flashcardTable } from "../db/schema.js"
+import { collectionTable, flashcardTable } from "../db/schema.js"
 
 export const getAllFlashcards = async (request, response) => {
     try {
@@ -32,18 +32,18 @@ export const postFlashcard = async (request, response) => {
 }
 
 export const deleteFlashcard = async (request, response) => {
-    const { id } = request.params
+    const { id, collectionId } = request.params
 
     try {
-        const userId = request.userId
+        const userId = request.userId.userId
         const [flashcardToDelete] = await db.select().from(flashcardTable).where(eq(flashcardTable.id, id))
+        const [parentCollection] = await db.select().from(collectionTable).where(eq(collectionTable.id, flashcardToDelete.collectionId))
 
-        /* collection pas faites, la verif de l'userid a peu pres ça
-        if (userId != flashcardToDelete.collectionId.owner_id) {
+        if (userId != parentCollection.ownerId) {
             return response.status(403).json({
                 error: "Non autorisé",
             })
-        }*/
+        }
 
         const [deletedFlashcard] = await db.delete(flashcardTable).where(eq(flashcardTable.id, id)).returning()
         if (!deletedFlashcard) {
