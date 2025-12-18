@@ -23,12 +23,7 @@ export const postFlashcard = async (request, response) => {
         const flashcard = request.body
         const userId = request.userId.userId
 
-        console.log(collectionId)
-        console.log(request.body)
-
         const [parentCollection] = await db.select().from(collectionTable).where(eq(collectionTable.id, collectionId))
-
-        console.log(parentCollection)
 
         if (userId != parentCollection.ownerId) {
             return response.status(403).json({
@@ -90,11 +85,21 @@ export const getOneFlashcard = async (request, response) => {
     const { id } = request.params
     
     try {
-        const [flashcard ] = await db.select().from(flashcardTable).where(eq(flashcardTable.id, id))
+        const [flashcard] = await db.select().from(flashcardTable).where(eq(flashcardTable.id, id))
 
         if (!flashcard) {
             return response.status(404).json({
                 error: "Flashcard non trouvée",
+            })
+        }
+
+        const userId = request.userId.userId
+        const [flashcardToShow] = await db.select().from(flashcardTable).where(eq(flashcardTable.id, id))
+        const [parentCollection] = await db.select().from(collectionTable).where(eq(collectionTable.id, flashcardToShow.collectionId))
+
+        if (userId != parentCollection.ownerId && !parentCollection.isPublic) {
+            return response.status(403).json({
+                error: "Non autorisé",
             })
         }
 
