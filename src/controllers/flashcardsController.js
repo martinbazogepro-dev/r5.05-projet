@@ -2,6 +2,7 @@ import { eq } from "drizzle-orm"
 import { db } from "../db/database.js"
 import { collectionTable, flashcardTable } from "../db/schema.js"
 
+
 export const getAllFlashcards = async (request, response) => {
     try {
         const flashcards = await db.select().from(flashcardTable).orderBy("id", "asc")
@@ -14,9 +15,27 @@ export const getAllFlashcards = async (request, response) => {
     }
 }
 
+
 export const postFlashcard = async (request, response) => {
+    const { collectionId } = request.body
+
     try {
         const flashcard = request.body
+        const userId = request.userId.userId
+
+        console.log(collectionId)
+        console.log(request.body)
+
+        const [parentCollection] = await db.select().from(collectionTable).where(eq(collectionTable.id, collectionId))
+
+        console.log(parentCollection)
+
+        if (userId != parentCollection.ownerId) {
+            return response.status(403).json({
+                error: "Non autorisé",
+            })
+        }
+
         const [createdFlashcard] = await db.insert(flashcardTable).values(flashcard).returning()
         
         response.status(201).json({
@@ -31,11 +50,13 @@ export const postFlashcard = async (request, response) => {
     }
 }
 
+
 export const deleteFlashcard = async (request, response) => {
-    const { id, collectionId } = request.params
+    const { id } = request.params
 
     try {
         const userId = request.userId.userId
+
         const [flashcardToDelete] = await db.select().from(flashcardTable).where(eq(flashcardTable.id, id))
         const [parentCollection] = await db.select().from(collectionTable).where(eq(collectionTable.id, flashcardToDelete.collectionId))
 
@@ -64,11 +85,12 @@ export const deleteFlashcard = async (request, response) => {
     }
 }
 
+
 export const getOneFlashcard = async (request, response) => {
     const { id } = request.params
     
     try {
-        const [flashcard ]= await db.select().from(flashcardTable).where(eq(flashcardTable.id, id))
+        const [flashcard ] = await db.select().from(flashcardTable).where(eq(flashcardTable.id, id))
 
         if (!flashcard) {
             return response.status(404).json({
