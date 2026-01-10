@@ -4,7 +4,7 @@ import { validateBody, validateParams } from "../middleware/validation.js";
 
 import {
     created, getAllCollections, getOneCollection, getMyCollections, getPublicCollectionsByTitle,
-    modifyCollectionTitle, modifyCollectionDescription, modifyCollectionVisibility
+    modifyCollectionTitle, modifyCollectionDescription, modifyCollectionVisibility, deleteCollection
 } from '../controllers/collectionController.js';
 
 import { authenticateToken } from '../middleware/authenticateToken.js';
@@ -22,6 +22,7 @@ router.get("/getbytitle/:title", validateParams(collectionSchema), getPublicColl
 router.put("/:id/modifytitle/:title", validateParams(collectionSchema), modifyCollectionTitle)
 router.put("/:id/modifydescription/:description", validateParams(collectionSchema), modifyCollectionDescription)
 router.put("/:id/modifyvisibility/:isPublic", validateParams(collectionSchema), modifyCollectionVisibility)
+router.delete("/:id", validateParams(collectionSchema), deleteCollection)
 
 
 export default router

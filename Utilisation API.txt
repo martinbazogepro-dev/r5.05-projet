@@ -23,7 +23,7 @@ Route /flashcards :
 
 [POST] /flashcards/
 {
-  "collectionId": "31115d30-f483-4cbd-94da-3e7823c8843f",
+  "collectionId": "5b8b6a6e-288c-496b-bbc1-79c7677c02a1",
   "frontText": "bonjour",
   "backText": "au revoir"
 }

@@ -1,6 +1,6 @@
 import { eq } from "drizzle-orm"
 import { db } from '../db/database.js';
-import { collectionTable } from '../db/schema.js'
+import { collectionTable, flashcardTable } from '../db/schema.js'
 
 /**
  * @param {request} req
@@ -225,6 +225,39 @@ export const modifyCollectionVisibility = async (request, response) => {
         console.error(error)
         response.status(500).json({
             error: "Pas réussi à mettre à jour la collection",
+        })
+    }
+}
+
+export const deleteCollection = async (request, response) => {
+    const { id } = request.params
+
+    try {
+        const userId = request.userId.userId
+        const [collectionToDelete] = await db.select().from(collectionTable).where(eq(collectionTable.id, id))
+
+        if (!collectionToDelete) {
+            return response.status(404).json({
+                error: "Collection non trouvée",
+            })
+        }
+
+        if (collectionToDelete.ownerId != userId) {
+            return response.status(403).json({
+                error: "Non autorisé",
+            })
+        }
+
+        await db.delete(flashcardTable).where(eq(flashcardTable.collectionId, id))
+        await db.delete(collectionTable).where(eq(collectionTable.id, id))
+
+        response.status(200).json({
+            message: "Collection supprimée"
+        })
+    } catch (error) {
+        console.error(error)
+        response.status(500).json({
+            error: "Pas réussi à supprimer la collection",
         })
     }
 }
