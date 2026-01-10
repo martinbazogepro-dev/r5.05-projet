@@ -98,7 +98,133 @@ export const getMyCollections = async (request, response) => {
     } catch (error) {
         console.error(error)
         response.status(500).json({
-            error: "Pas réussi à obtenir la collection",
+            error: "Pas réussi à obtenir les collections",
+        })
+    }
+}
+
+export const getPublicCollectionsByTitle = async (request, response) => {
+    const { title } = request.params
+
+    try {
+        const [collection] = await db.select().from(collectionTable).where(eq(collectionTable.title, title), collectionTable.isPublic)
+
+        if (!collection) {
+            return response.status(404).json({
+                error: "Collections non trouvées",
+            })
+        }
+
+        response.status(200).json({
+            message: "Collections trouvées",
+            data: collection,
+        })
+    } catch (error) {
+        console.error(error)
+        response.status(500).json({
+            error: "Pas réussi à obtenir les collections",
+        })
+    }
+}
+
+export const modifyCollectionTitle = async (request, response) => {
+    const { id, title } = request.params
+
+    try {
+        const userId = request.userId.userId
+        const [collectionToUpdate] = await db.select().from(collectionTable).where(eq(collectionTable.id, id))
+
+        if (!collectionToUpdate) {
+            return response.status(404).json({
+                error: "Collection non trouvée",
+            })
+        }
+
+        if (collectionToUpdate.ownerId != userId) {
+            return response.status(403).json({
+                error: "Non autorisé",
+            })
+        }
+
+        await db.update(collectionTable).set({ title: title }).where(eq(collectionTable.id, id))
+        const [updatedCollection] = await db.select().from(collectionTable).where(eq(collectionTable.id, id))
+
+        response.status(200).json({
+            message: "Collection mise à jour",
+            data: updatedCollection,
+        })
+    } catch (error) {
+        console.error(error)
+        response.status(500).json({
+            error: "Pas réussi à mettre à jour la collection",
+        })
+    }
+}
+
+export const modifyCollectionDescription = async (request, response) => {
+    const { id, description } = request.params
+
+    try {
+        const userId = request.userId.userId
+        const [collectionToUpdate] = await db.select().from(collectionTable).where(eq(collectionTable.id, id))
+
+        if (!collectionToUpdate) {
+            return response.status(404).json({
+                error: "Collection non trouvée",
+            })
+        }
+
+        if (collectionToUpdate.ownerId != userId) {
+            return response.status(403).json({
+                error: "Non autorisé",
+            })
+        }
+
+        await db.update(collectionTable).set({ description: description }).where(eq(collectionTable.id, id))
+        const [updatedCollection] = await db.select().from(collectionTable).where(eq(collectionTable.id, id))
+
+        response.status(200).json({
+            message: "Collection mise à jour",
+            data: updatedCollection,
+        })
+    } catch (error) {
+        console.error(error)
+        response.status(500).json({
+            error: "Pas réussi à mettre à jour la collection",
+        })
+    }
+}
+
+export const modifyCollectionVisibility = async (request, response) => {
+    const { id, isPublic } = request.params
+
+    try {
+        const userId = request.userId.userId
+        const [collectionToUpdate] = await db.select().from(collectionTable).where(eq(collectionTable.id, id))
+
+        if (!collectionToUpdate) {
+            return response.status(404).json({
+                error: "Collection non trouvée",
+            })
+        }
+
+        if (collectionToUpdate.ownerId != userId) {
+            return response.status(403).json({
+                error: "Non autorisé",
+            })
+        }
+
+        await db.update(collectionTable).set({ isPublic: isPublic }).where(eq(collectionTable.id, id))
+        const [updatedCollection] = await db.select().from(collectionTable).where(eq(collectionTable.id, id))
+
+        response.status(200).json({
+            message: "Collection mise à jour",
+            data: updatedCollection,
+        })
+    } catch (error) {
+        console.error(error)
+        response.status(500).json({
+            error: "Pas réussi à mettre à jour la collection",
         })
     }
 }
