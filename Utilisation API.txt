@@ -1,13 +1,14 @@
 
 Route /auth :
 
-/auth/login :
+[POST] /auth/login
 {
   "mail": "hugo.hugo@orange.fr",
   "password": "hugogo"
 }
 
-/auth/register
+
+[POST] /auth/register
 {
   "mail": "hugo.hugo@orange.fr",
   "firstname": "hugoo",
@@ -22,7 +23,7 @@ Route /flashcards :
 
 [POST] /flashcards/
 {
-  "collectionId": "d6b9b331-73bf-45ae-b722-9faba18ca7d9",
+  "collectionId": "31115d30-f483-4cbd-94da-3e7823c8843f",
   "frontText": "bonjour",
   "backText": "au revoir"
 }
