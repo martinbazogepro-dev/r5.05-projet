@@ -24,9 +24,8 @@ export const authenticateToken = (req, res, next) => {
         const userId = decodeToken.userId
         req.userId = { userId }
         next()
-    } catch(error){
-        res.status(401).json({error:'Chalut'})
-
+    } catch(error) {
+        res.status(401).json({error:'Token non conforme'})
     }
 }
 
