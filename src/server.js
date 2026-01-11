@@ -1,7 +1,7 @@
 import express from "express"
 import authsRoutes from './routers/authsRoutes.js'
 import flashcardRoutes from "./routers/flashcardsRoutes.js"
-import adminRoutes from './routers/adminsRoutes.js'
+import adminsRoutes from './routers/adminsRoutes.js'
 import collectionRoutes from './routers/collectionRouters.js'
 import revisionRoutes from './routers/revisionRoutes.js'
 import swaggerUi from "swagger-ui-express";
@@ -15,7 +15,7 @@ app.use(express.json());
 
 app.use('/auth', authsRoutes)
 app.use("/flashcards", flashcardRoutes)
-app.use('/admin', adminRoutes)
+app.use('/admin', adminsRoutes)
 app.use('/collections', collectionRoutes)
 app.use('/revision', revisionRoutes)
 

@@ -1,4 +1,9 @@
 import swaggerJSDoc from "swagger-jsdoc";
+import path from "path";
+import { fileURLToPath } from "url";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const options = {
   definition: {
@@ -6,13 +11,10 @@ const options = {
     info: {
       title: "Documentation API",
       version: "1.0.0",
-      description: "Documentation de l'API",
+      description: "Documentation complète alignée avec Zod",
     },
     servers: [
-      {
-        url: "http://localhost:3000",
-        description: "Serveur local",
-      },
+      { url: "http://localhost:3000" }
     ],
     components: {
       securitySchemes: {
@@ -23,83 +25,56 @@ const options = {
         },
       },
       schemas: {
-        Flashcard: {
-          type: "object",
-          properties: {
-            id: { type: "integer" },
-            question: { type: "string" },
-            answer: { type: "string" },
-          },
-        },
-        FlashcardCreate: {
-          type: "object",
-          required: ["collectionId", "frontText", "backText"],
-          properties: {
-            collectionId: {
-              type: "string",
-              format: "uuid",
-              example: "5b8b6a6e-288c-496b-bbc1-79c7677c02a1",
-            },
-            frontText: { type: "string", example: "bonjour" },
-            backText: { type: "string", example: "au revoir" },
-          },
-        },        
-        Collection: {
-          type: "object",
-          properties: {
-            id: { type: "integer" },
-            title: { type: "string" },
-            description: { type: "string" },
-            isPublic: { type: "boolean" },
-          },
-        },
-        CollectionCreate: {
-          type: "object",
-          required: ["title", "description", "is_public"],
-          properties: {
-            title: { type: "string", example: "titre" },
-            description: { type: "string", example: "description" },
-            is_public: { type: "boolean", example: true },
-          },
-        },        
+
+        // ---------- AUTH ----------
         UserRegister: {
           type: "object",
-          required: ["mail", "password", "firstname", "lastname", "nickname"],
+          required: ["mail", "firstname", "lastname", "nickname", "password"],
           properties: {
-            mail: { type: "string", example: "hugo.hugo@orange.fr" },
-            firstname: { type: "string", example: "hugoo" },
-            lastname: { type: "string", example: "hugoo" },
-            nickname: { type: "string", example: "hugoo" },
-            password: { type: "string", example: "hugogo" },
+            mail: { type: "string", format: "email", example: "hugo.hugo@orange.fr" },
+            firstname: { type: "string", minLength: 5, maxLength: 30 },
+            lastname: { type: "string", minLength: 5, maxLength: 30 },
+            nickname: { type: "string", minLength: 5, maxLength: 30 },
+            password: { type: "string", minLength: 6, maxLength: 100 },
           },
         },
         UserLogin: {
           type: "object",
           required: ["mail", "password"],
           properties: {
-            mail: { type: "string", example: "hugo.hugo@orange.fr" },
-            password: { type: "string", example: "hugogo" },
+            mail: { type: "string", format: "email", example: "hugo.hugo@orange.fr" },
+            password: { type: "string", minLength: 6, maxLength: 100 },
           },
-        },        
-        UserAuth: {
+        },
+
+        // ---------- COLLECTIONS ----------
+        CollectionCreate: {
           type: "object",
           properties: {
-            email: { type: "string" },
-            password: { type: "string" },
+            title: { type: "string", minLength: 2, maxLength: 30, nullable: true },
+            description: { type: "string", minLength: 2, maxLength: 30, nullable: true },
+            is_public: { type: "boolean", nullable: true },
           },
-          required: ["email", "password"],
         },
+
+        // ---------- FLASHCARDS ----------
+        FlashcardCreate: {
+          type: "object",
+          properties: {
+            collectionId: { type: "string", format: "uuid", nullable: true },
+            frontText: { type: "string", minLength: 1, maxLength: 200, nullable: true },
+            backText: { type: "string", minLength: 1, maxLength: 200, nullable: true },
+            frontUrl: { type: "string", maxLength: 200, nullable: true },
+            backUrl: { type: "string", maxLength: 200, nullable: true },
+          },
+        },
+
       },
     },
-    security: [
-      {
-        bearerAuth: [],
-      },
-    ],
+    security: [{ bearerAuth: [] }],
   },
-  apis: ["./routers/*.js"],
+
+  apis: [path.join(__dirname, "routers", "**", "*.js")],
 };
 
-const swaggerSpec = swaggerJSDoc(options);
-
-export default swaggerSpec;
+export default swaggerJSDoc(options);
