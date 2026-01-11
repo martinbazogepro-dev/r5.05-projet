@@ -56,7 +56,7 @@ export const nextRevisionDateTable = sqliteTable("next_revision_date", {
         .references(() => flashcardTable.id, {
             onDelete: 'cascade'
         }),
-    nextRevisionDate: integer('next_revision_date', {node: 'timestamp'}).notNull().$defaultFn(() => new Date()),
-    lastRevisionDate: integer('last_revision_date', {node: 'timestamp'}).notNull().$defaultFn(() => new Date()),
+    nextRevisionDate: integer('next_revision_date', { mode: 'timestamp' }).notNull().$defaultFn(() => new Date()),
+    lastRevisionDate: integer('last_revision_date', { mode: 'timestamp' }).notNull().$defaultFn(() => new Date()),
     level: integer('level').notNull()
 })
